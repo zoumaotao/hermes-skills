@@ -1,3 +1,15 @@
+---
+name: memory-system-enhancement
+description: "轻量增强 Hermes Agent 记忆系统——加时间戳、排序、top-K 截断。Use when the user says '记忆太乱了' / '能不能把记忆变智能一点' / '记忆没有时间概念' / '记忆太多被截断' — requires modifying tools/memory_tool.py in ~/.hermes/hermes-agent/."
+version: 1.0.0
+author: zoumaotao
+license: MIT
+metadata:
+  hermes:
+    tags: [memory, enhancement, hermes-agent, python, timestamp, sorting]
+    related_skills: [code-change-decision-framework, code-change-safety-net, systematic-debugging]
+---
+
 # 记忆系统增强 — 时间戳 + 排序 + top-K 上限控制
 
 > 适用场景：Hermes Agent 内置记忆（MEMORY.md / USER.md）是扁平的字符串列表，不分层不分类不衰减。需要轻量增强来让记忆有时间维度、排序合理、系统提示不因记忆过多而被 silent truncation。
@@ -53,7 +65,7 @@ def _strip_metadata(content: str) -> str:
 
 **分组 C：top-K 注入上限控制**
 
-重写 `_render_block()`— 按优先级和时间排序后，贪婪地选取条目直到达到字符上限，超出部分（最旧/低优先级）舍弃。头部添加 `(showing N/M entries — oldest excluded)` 提示。
+重写 `_render_block()` — 按优先级和时间排序后，贪婪地选取条目直到达到字符上限，超出部分（最旧/低优先级）舍弃。头部添加 `(showing N/M entries — oldest excluded)` 提示。
 
 **分组 D：磁盘上限放宽到 2x**
 
@@ -114,3 +126,9 @@ cp tools/memory_tool.py.bak tools/memory_tool.py
 | P2 | 按分类选择性注入 | 进一步省 token | 中 |
 | P3 | 自动淘汰/环形缓冲区 | 磁盘不无限膨胀 | 高 |
 | P4 | 优先级评分（重要性×时间） | 智能排序 | 高 |
+
+## Gotchas
+
+- 这个改动涉及生产环境正在运行的代码。改前必须按照 `code-change-safety-net` 做备份
+- 测试时一定用临时目录，不要在生产 `~/.hermes/memory.*` 文件上测试
+- 改完重启 Gateway 前必须先问用户

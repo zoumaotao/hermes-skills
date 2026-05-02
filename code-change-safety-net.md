@@ -1,3 +1,15 @@
+---
+name: code-change-safety-net
+description: "在修改 Hermes Agent 核心代码前建立安全网。Use when modifying Python files in ~/.hermes/hermes-agent/ — prevents unrevertable changes, untested modifications, or unapplied fixes after gateway restart."
+version: 1.0.0
+author: zoumaotao
+license: MIT
+metadata:
+  hermes:
+    tags: [safety, rollback, hermes-agent, production, python, backup]
+    related_skills: [code-change-decision-framework, hermes-configuration, systematic-debugging]
+---
+
 # 代码改动安全流程 — 改前备份、改时检查、改后测试、可回滚
 
 > 适用场景：你需要修改正在运行中的代码（如 `tools/`、`hermes_ai_backend/` 目录下的文件），修改后要重新生效。
@@ -12,11 +24,11 @@
 # 1. 确认当前所在目录
 cd ~/.hermes/hermes-agent
 
-# 2. 确认 git 状态
+# 2. 确认 git 状态（如果仓库已初始化）
 git log --oneline -3
 git status --short
 
-# 3. 备份要改的文件
+# 3. 备份要改的文件（非常重要！）
 cp tools/memory_tool.py tools/memory_tool.py.bak
 # 或统一备份到目录
 mkdir -p /tmp/hermes-change-backup
@@ -43,7 +55,7 @@ python -c "import sys; sys.path.insert(0, '.'); from tools.memory_tool import Me
 
 > **核心原则：不 mock 文件 IO，用临时目录做真实 IO 测试。**
 
-创建独立测试文件：
+创建独立测试文件（不要改原项目的测试）：
 
 ```python
 # test_xxx.py
@@ -120,3 +132,9 @@ python -c "import sys; sys.path.insert(0, '.'); from tools.memory_tool import Me
 | 改完后忘记重启 | 改动未生效，用户以为没做 | 第四步必须做 |
 | 多个文件连环改 | 局部回滚困难 | 每次只改一个文件，测完再改下一个 |
 | 无意中杀了 Gateway 进程 | 服务中断 | 不要自己 kill 进程，用 process list 确认再用安全方式重启 |
+
+## Gotchas
+
+- 不要自己重启 Gateway — 如果通过 IM 对话，重启会断掉当前连接。必须先问用户：**"需要重启 Gateway 使改动生效，你同意吗？"** 等用户回复再操作
+- 任何 Python 文件修改后都要先过语法检查，不要相信"只改了一行"
+- 备份文件保留到用户确认新版正常后再删除，不要改完就清

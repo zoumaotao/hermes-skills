@@ -3,6 +3,10 @@ name: hermes-wechat-feishu-setup
 title: "Hermes IM 平台连接配置"
 description: "在 Hermes Gateway 中配置任意 IM 平台的连接，全程在聊天对话中完成，无需用户操作终端。支持微信、飞书、Telegram、Discord、Slack、钉钉等 20+ 平台。"
 category: "messaging"
+metadata:
+  hermes:
+    tags: [wechat, feishu, im, messaging, gateway, configuration]
+    related_skills: [hermes-configuration, hermes-vision-setup]
 ---
 
 # Hermes IM 平台连接配置

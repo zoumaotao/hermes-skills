@@ -3,6 +3,10 @@ name: hermes-vision-setup
 title: "Hermes Agent Vision 配置技能"
 description: "根据用户现有条件（API Key、网络环境、操作系统），自动决策并配置最佳的 Vision 看图方案"
 category: "messaging"
+metadata:
+  hermes:
+    tags: [vision, image, setup, configuration, api-key, hermes-agent]
+    related_skills: [hermes-configuration, hermes-wechat-feishu-setup]
 ---
 
 # Hermes Agent Vision 配置技能

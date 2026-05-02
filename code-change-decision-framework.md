@@ -1,3 +1,15 @@
+---
+name: code-change-decision-framework
+description: "先做取舍再写代码。Use when the user says '可以加个功能吗' / '能不能让X更好用' / '增强一下X' — structured trade-off analysis before modifying existing systems, not for greenfield builds."
+version: 1.0.0
+author: zoumaotao
+license: MIT
+metadata:
+  hermes:
+    tags: [decision-framework, trade-off, architecture, planning, hermes-agent]
+    related_skills: [code-change-safety-net, writing-plans, systematic-debugging]
+---
+
 # 代码改动决策框架 — 先做取舍，再写代码
 
 > 适用场景：你需要在现有系统上做增强（而非重写），在写代码之前先进行结构化的取舍分析。
@@ -65,3 +77,9 @@
 4. **代码实现** → 按 plan 执行，每次改动跑语法检查
 5. **测试验证** → 写内联测试（零 mock 文件 IO），测全部边界场景
 6. **确认上线** → 问用户是否要重启/生效
+
+## Gotchas
+
+- 取舍分析不是走形式 — 如果用户说"不用分析了直接改"，记一句到记忆里下次遇到类似请求就默认跳过
+- "不改工具/API schema" 的例外：真的遇到了无法达成的功能目标 → 破例，但必须保证不破坏已有消费者
+- 破例时要在「被否决方案」里写清楚：这次为什么破例、以后什么条件下可以持续这个改动

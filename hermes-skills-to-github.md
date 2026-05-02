@@ -3,6 +3,10 @@ name: hermes-skills-to-github
 title: "Hermes Skills 推送到 GitHub 仓库"
 description: "将 Hermes Agent 的技能（skills）推送到 GitHub 仓库，方便保存、分享和跨设备同步。自动判断用户情况并引导操作。"
 category: "github"
+metadata:
+  hermes:
+    tags: [github, publish, skills, sync, sharing]
+    related_skills: [hermes-configuration]
 ---
 
 # Hermes Skills 推送到 GitHub 仓库
